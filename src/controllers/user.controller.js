@@ -18,7 +18,7 @@ const registerUser = asynchandler(async(req, res,)=>{
    */
 
    const{fullname, email, username, password} = req.body
-   console.log("email", email)
+//    console.log(req.body)
 
    if(
     [fullname, email, username, password].some((field)=> field?.trim() === "")
@@ -37,7 +37,14 @@ const registerUser = asynchandler(async(req, res,)=>{
    }
 
   const avatarlocalpath =  req.files?.avatar[0]?.path;
-  const coverimagelocalpath =req.files?.coverimage[0]?.path;
+
+  let coverImageLocalPath;
+  if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+      coverImageLocalPath = req.files.coverImage[0].path
+  }
+  
+
+
 
   if(!avatarlocalpath){
     throw new apierror(400,"avatar is mandatory");
@@ -64,6 +71,8 @@ const registerUser = asynchandler(async(req, res,)=>{
   const createduser = await users.findById(user._id).select(
     "-password -refreshToken"
   )
+
+  console.log(createduser)
 
   if(!createduser) { 
     throw new apierror(500, "user not created")
