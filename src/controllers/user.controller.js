@@ -4,7 +4,7 @@ import { apierror } from "../utils/apierror.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 import { users } from "../models/user.model.js";
-
+import mongoose from "mongoose";
 
 const generateaccessandrefreshtokens = async (userId) => {
     try {
@@ -167,8 +167,8 @@ const logoutUser = asynchandler(async (req, res) => {
     await users.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             }
         }, {
         new: true
